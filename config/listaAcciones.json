@@ -1,0 +1,32 @@
+{
+		"lista de acciones" : {
+			"regexp" : "(lista|listado|grupo|listame|enseñame)?(acciones|comandos)",
+			"accion" : "listarAcciones",
+			"grupos" : [-1]
+		},
+		"esta el bot activo" : {
+			"regexp" : "((activo|funcionando|encendido|marcha)?(bot|programa|programilla))|((bot|programa|programilla)(activo|funcionando|encendido|marcha)?)",
+			"accion" : "estaBotActivo",
+			"grupos" : [ -1 ]
+		},
+		"abre el puerto" :{
+			"regexp" : "(abre|abrir)\\s+(el)?\\s?puerto\\s+(\\d*)$",
+			"accion" : "abrirPuerto",
+			"grupos" : [ 3 ]
+		},
+		"cierra el puerto" :{
+			"regexp" : "(cierra|cerrar)\\s+(el)?\\s?puerto\\s+(\\d*)$",
+			"accion" : "cerrarPuerto",
+			"grupos" : [ 3 ]
+		},
+		"puertos abiertos" : {
+			"regexp" : "puertos\\s+abiertos$",
+			"accion" : "listarPuertos",
+			"grupos" : [ -1 ]
+		},
+		"borrar iptables":{
+			"regexp" : "borrar|eliminar|elimina\\s+(las)?\\s?iptables",
+			"accion" : "eliminarIptables",
+			"grupos" : [-1]
+		}
+}
