@@ -16,6 +16,10 @@ class Acciones:
 		aux = "Lista de acciones:\n"
 		for accion in self.parseador.listaAcciones.keys():
 			aux += "\t"+accion+"\n"
+
+		if aux is None:
+			aux = "No existe lista de acciones"
+
 		return aux
 
 	def estaBotActivo(self):
@@ -123,5 +127,7 @@ class Acciones:
 			#Agrego la linea a la salida
 			salida += "El puerto "+pnumero+" está abierto"+ipOrigen+ipDestino+"\n"
 
+		if salida is None:
+			saldia = "No hay ningun puerto abierto"
+
 		return salida
-		
