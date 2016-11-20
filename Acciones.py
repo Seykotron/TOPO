@@ -29,8 +29,7 @@ class Acciones:
 		"""
 			Metodo que abre un puerto específico
 		"""
-
-		output = subprocess.run("sudo iptables -I INPUT 1 -p tcp --dport "+str(nPuerto)+" -j ACCEPT", shell=True, stdout=subprocess.PIPE,
+		output = subprocess.run("iptables -I INPUT 1 -p tcp --dport "+str(nPuerto)+" -j ACCEPT", shell=True, stdout=subprocess.PIPE,
                         universal_newlines=True)
 		return "Abriendo el puerto "+str(nPuerto)
 
@@ -38,13 +37,29 @@ class Acciones:
 		"""
 			Metodo que cierra un puerto específico
 		"""
-
+		output = subprocess.run("iptables -D INPUT -p tcp --dport "+str(nPuerto)+" -j ACCEPT", shell=True, stdout=subprocess.PIPE,
+                        universal_newlines=True)
 		return "Cerrando el puerto "+str(nPuerto)
 
 	def eliminarIptables(self, username ):
 		"""
 			Metodo que elimina las iptables
 		"""
+
+		output = subprocess.run("iptables -P INPUT ACCEPT", shell=True, stdout=subprocess.PIPE,
+                        universal_newlines=True)
+		output = subprocess.run("iptables -P FORWARD ACCEPT", shell=True, stdout=subprocess.PIPE,
+                        universal_newlines=True)
+		output = subprocess.run("iptables -P OUTPUT ACCEPT", shell=True, stdout=subprocess.PIPE,
+                        universal_newlines=True)
+		output = subprocess.run("iptables -t nat -F", shell=True, stdout=subprocess.PIPE,
+                        universal_newlines=True)
+		output = subprocess.run("iptables -t mangle -F", shell=True, stdout=subprocess.PIPE,
+                        universal_newlines=True)
+		output = subprocess.run("iptables -F", shell=True, stdout=subprocess.PIPE,
+                        universal_newlines=True)
+		output = subprocess.run("iptables -X", shell=True, stdout=subprocess.PIPE,
+                        universal_newlines=True)
 
 		return "Iptables eliminadas."
 
@@ -90,7 +105,7 @@ class Acciones:
 		#Si todas las salidas han tenido mas de dos lineas de output
 		if len(listaSrc) > 2 and len(listaDst) > 2 and len(listaPrt) > 2:
 			#Las recorro obviando las tres primeras (que son cabeceras) y la ultima (que esta vacia por un \n que hay)
-			for i in range(3,len(listaSrc)-1):
+			for i in range(2,len(listaSrc)-1):
 				#Agrego a la lista de puertos abiertos un diccionario con la informacion util
 				puertosAbiertos.append( { "src": listaSrc[i], "dst": listaDst[i], "port": listaPrt[i] } )
 
@@ -99,24 +114,27 @@ class Acciones:
 
 		#Recorro la lista de los puertos abiertos
 		for puerto in puertosAbiertos:
+			try:
+				if "dpt:" in puerto["port"]:
+					ipOrigen = ""
+					ipDestino = ""
 
-			ipOrigen = ""
-			ipDestino = ""
+					#Si la ip origen es distinta de 0.0.0.0/0 entonces es que existe una ip origen
+					if puerto["src"] != "0.0.0.0/0":
+						ipOrigen = " desde la ip origen "+puerto["src"]
 
-			#Si la ip origen es distinta de 0.0.0.0/0 entonces es que existe una ip origen
-			if puerto["src"] != "0.0.0.0/0":
-				ipOrigen = " desde la ip origen "+puerto["src"]
+					#Si la ip destino es distinta de 0.0.0.0/0 entonces es que existe una ip destino
+					if puerto["dst"] != "0.0.0.0/0":
+						ipDestino = " a la ip destino "+puerto["dst"]
 
-			#Si la ip destino es distinta de 0.0.0.0/0 entonces es que existe una ip destino
-			if puerto["dst"] != "0.0.0.0/0":
-				ipDestino = " a la ip destino "+puerto["dst"]
+					#Obtengo el numero del puerto (el output es del estilo prt:1234 y solo me interesa lo que esta despues de los :)
+					pnumero = puerto["port"].split(":")
+					pnumero = pnumero[1]
 
-			#Obtengo el numero del puerto (el output es del estilo prt:1234 y solo me interesa lo que esta despues de los :)
-			pnumero = puerto["port"].split(":")
-			pnumero = pnumero[1]
-
-			#Agrego la linea a la salida
-			salida += "El puerto "+pnumero+" está abierto"+ipOrigen+ipDestino+"\n"
+					#Agrego la linea a la salida
+					salida += "El puerto "+pnumero+" está abierto"+ipOrigen+ipDestino+"\n"
+			except:
+				print("Error al obtener los puertos")
 
 		if salida is None:
 			saldia = "No hay ningun puerto abierto"
