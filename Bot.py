@@ -32,7 +32,7 @@ class Bot:
 
 		#Recorro la lista mensaje a mensaje
 		for mensaje in mensajes:
-			respuesta = self.parser.parsear(mensaje["text"])
+			respuesta = self.parser.parsear( mensaje["screen_name"], mensaje["text"])
 
 			#Si hay una respuesta para el mensaje recibido, se le responde.
 			if respuesta is not None:

@@ -4,11 +4,6 @@
 			"accion" : "listarAcciones",
 			"grupos" : [-1]
 		},
-		"esta el bot activo" : {
-			"regexp" : "((activo|funcionando|encendido|marcha)?(bot|programa|programilla))|((bot|programa|programilla)(activo|funcionando|encendido|marcha)?)",
-			"accion" : "estaBotActivo",
-			"grupos" : [ -1 ]
-		},
 		"abre el puerto" :{
 			"regexp" : "(abre|abrir)\\s+(el)?\\s?puerto\\s+(\\d*)$",
 			"accion" : "abrirPuerto",
