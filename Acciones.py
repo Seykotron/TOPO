@@ -1,6 +1,9 @@
 """
 	By Seykotron
 	Clase en la que guardar los métodos que contendran las acciones a realizar.
+
+	Todos los metodos de esta clase deberan recibir un parametro como minimo, el cual sera
+	el nombre del usuario que mando el msg privado.
 """
 import re, json, time, threading, warnings,sys, subprocess
 
@@ -9,7 +12,7 @@ class Acciones:
 	def __init__(self, parseador):
 		self.parseador = parseador
 
-	def listarAcciones(self):
+	def listarAcciones(self, username):
 		"""
 			Metodo para listar las acciones
 		"""
@@ -22,19 +25,7 @@ class Acciones:
 
 		return aux
 
-	def estaBotActivo(self):
-		"""
-			Metodo que dice si esta el bot activo o no
-		"""
-		output = subprocess.run("pgrep Blogabet.py", shell=True, stdout=subprocess.PIPE,
-                        universal_newlines=True)
-
-		if output is None:
-			return "No esta activo el bot."
-		else:
-			return "El bot esta funcionando."
-
-	def abrirPuerto(self, nPuerto):
+	def abrirPuerto(self, username,nPuerto):
 		"""
 			Metodo que abre un puerto específico
 		"""
@@ -43,21 +34,21 @@ class Acciones:
                         universal_newlines=True)
 		return "Abriendo el puerto "+str(nPuerto)
 
-	def cerrarPuerto(self, nPuerto ):
+	def cerrarPuerto(self, username, nPuerto ):
 		"""
 			Metodo que cierra un puerto específico
 		"""
 
 		return "Cerrando el puerto "+str(nPuerto)
 
-	def eliminarIptables(self ):
+	def eliminarIptables(self, username ):
 		"""
 			Metodo que elimina las iptables
 		"""
 
 		return "Iptables eliminadas."
 
-	def listarPuertos(self):
+	def listarPuertos(self, username ):
 		"""
 			Metodo que lista los puertos que estan abiertos por iptables
 		"""

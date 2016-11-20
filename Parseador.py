@@ -18,7 +18,7 @@ class Parseador:
 		with open('./config/listaAcciones.json') as data_file:
 			self.listaAcciones = json.load(data_file)
 
-	def parsear(self, frase ):
+	def parsear(self, username, frase ):
 		"""
 			Este metodo parsea la frase que le llegue y devuelve una salida en funcion de la frase de entrada
 			en caso de que coincida con sus acciones
@@ -38,13 +38,13 @@ class Parseador:
 			if match:
 				if hasattr(self.acciones, accion["accion"] ):
 					if len(accion["grupos"]) == 1 and accion["grupos"][0] == -1:
-						return getattr(self.acciones, accion["accion"])()
+						return getattr(self.acciones, accion["accion"])(username)
 					elif len(accion["grupos"]) == 1:
 						variable = match.group( accion["grupos"][0] )
-						return getattr(self.acciones, accion["accion"])( variable )
+						return getattr(self.acciones, accion["accion"])( username, variable )
 					elif len(accion["grupos"]) > 1:
 						aux = []
 						for n in accion["grupos"]:
 							aux.append = match.group( n )
-						return getattr(self.acciones, accion["accion"])( aux )
+						return getattr(self.acciones, accion["accion"])( username, aux )
 				break
